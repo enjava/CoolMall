@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.ray.coolmall.R;
-import com.ray.coolmall.util.SerialPortUtil;
 
 public class MainActivity extends Activity {
 
@@ -12,6 +11,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SerialPortUtil.getInstance();
+        //SerialPortUtil.getInstance();
     }
 }
