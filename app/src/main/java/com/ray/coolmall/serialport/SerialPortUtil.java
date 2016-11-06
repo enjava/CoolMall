@@ -1,10 +1,8 @@
-package com.ray.coolmall.util;
+package com.ray.coolmall.serialport;
 
 /**
  * Created by en on 2016/11/5.
  */
-
-import com.ray.coolmall.serialport.SerialPort;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +21,7 @@ public class SerialPortUtil {
     private OutputStream mOutputStream;
     private InputStream mInputStream;
     private ReadThread mReadThread;
-    private String path = "/dev/ttyS3";
+    private String path = "/dev/ttyS2";
     private int baudrate = 9600;
     private static SerialPortUtil portUtil;
     private OnDataReceiveListener onDataReceiveListener = null;
@@ -65,26 +63,34 @@ public class SerialPortUtil {
     }
 
     /**
-     * 发送指令到串口
-     *
-     * @param cmd
-     * @return
+     * 往串口发送数据
+     * @param serialPort 串口对象
+     * @param order	待发送数据
      */
-    public boolean sendCmds(String cmd) {
-        boolean result = true;
-        byte[] mBuffer = (cmd+"\r\n").getBytes();
-//注意：我得项目中需要在每次发送后面加\r\n，大家根据项目项目做修改，也可以去掉，直接发送mBuffer
+    public static void sendToPort(SerialPort serialPort, byte[] order) throws IOException {
+
+        OutputStream out = null;
+
         try {
-            if (mOutputStream != null) {
-                mOutputStream.write(mBuffer);
-            } else {
-                result = false;
-            }
+            //order[0]=0x39;
+            out = serialPort.getOutputStream();
+            out.write(order);
+            out.flush();
+
+
         } catch (IOException e) {
-            e.printStackTrace();
-            result = false;
+            throw new IOException();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                    out = null;
+                }
+            } catch (IOException e) {
+                throw new IOException();
+            }
         }
-        return result;
+
     }
 
     public boolean sendBuffer(byte[] mBuffer) {
